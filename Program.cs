@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Security.Policy;
 using System.Text;
 
@@ -26,6 +28,25 @@ namespace ConsoleApplication1
                 builder.Append(word_builder.ToString());
             }
             return builder.ToString();
+        }
+
+        static bool CreateRandomFile(string path, int words = 10)
+        {
+            FileStream fileStream = null;
+
+            try
+            {
+                fileStream = File.Open(path, FileMode.Create);
+
+                StreamWriter output = new StreamWriter(fileStream);
+                output.Write(RandomText(words));
+                output.Close();
+                return false;
+            }
+            catch (Exception)
+            {
+                return true;
+            }
         }
 
         static void Main(string[] args)

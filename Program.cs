@@ -51,7 +51,33 @@ namespace ConsoleApplication1
 
         static void Main(string[] args)
         {
-            Console.WriteLine(RandomText(10));
+            string filePath = ".\\1.txt ";
+            var words = new SortedDictionary<int, List<string>>();
+
+            // create file with random text
+            CreateRandomFile(filePath, 30);
+
+            var fileContent = File.ReadAllText(filePath);
+            Console.WriteLine("===========Source file===========");
+            Console.WriteLine(fileContent);
+            Console.WriteLine();
+            var array = fileContent.Split((string[])null, StringSplitOptions.RemoveEmptyEntries);
+
+            for (int i = 0; i < array.Length; ++i)
+            {
+                var key = array[i].Length;
+                if (!words.ContainsKey(key))
+                    words.Add(key, new List<string>());
+
+                words[key].Add(array[i]);
+            }
+            foreach (var key in words.Keys)
+            {
+                Console.Write($"Size: {key} ".PadRight(9) + $"(total {words[key].Count}):".PadRight(11));
+                foreach (var word in words[key])
+                    Console.Write($"{word} ");
+                Console.WriteLine();
+            }
             Console.ReadLine();
         }
     }

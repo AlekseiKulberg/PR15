@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Security.Policy;
@@ -41,21 +42,41 @@ namespace ConsoleApplication1
                 StreamWriter output = new StreamWriter(fileStream);
                 output.Write(RandomText(words));
                 output.Close();
-                return false;
+                return true;
             }
             catch (Exception)
             {
-                return true;
+                return false;
             }
+        }
+
+        static List<int> readArrayFromFile(string filename)
+        {
+            var fileContent = File.ReadAllText(filename);
+
+            var array = fileContent.Split((string[])null, StringSplitOptions.RemoveEmptyEntries);
+            List<int> result = new List<int>();
+
+            for (int i = 0; i < array.Length; ++i)
+            {
+                result.Add(Int32.Parse(array[i]));
+            }
+            return result;
         }
 
         static void Main(string[] args)
         {
+            #region task1
             string filePath = ".\\1.txt ";
             var words = new SortedDictionary<int, List<string>>();
 
             // create file with random text
-            CreateRandomFile(filePath, 30);
+            if (!CreateRandomFile(filePath, 30))
+            {
+                Console.WriteLine("Unable to create file");
+                System.Environment.Exit(1);
+            }
+
 
             var fileContent = File.ReadAllText(filePath);
             Console.WriteLine("===========Source file===========");
@@ -78,7 +99,33 @@ namespace ConsoleApplication1
                     Console.Write($"{word} ");
                 Console.WriteLine();
             }
+
+            #endregion //task1
+
+            #region task2
+            var result = readArrayFromFile("../../array.txt");
+
+            Console.WriteLine("Task 2:");
+            int min = int.MaxValue;
+            int max = int.MinValue;
+
+            for (int i = 0; i < result.Count; ++i)
+            {
+                if (result[i] < min)
+                    min = result[i];
+                else if (result[i] > max)
+                    max = result[i];
+            }
+
+            for (int i = 0; i < result.Count; ++i)
+            {
+                if (result[i] != min && result[i] != max)
+                    Console.WriteLine(result[i]);
+            }
             Console.ReadLine();
+            #endregion //task2
+
+
         }
     }
 }
